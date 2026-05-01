@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Подключаем Bootstrap CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <title>Новость: {{ title }}</title> <!-- Выводите здесь title -->
+</head>
+<body>
+  <div id="wrapper">
+    <!-- Навигация -->
+   {% include "navigation.html" %}
+    <!-- Контент страницы -->
+    <div class="container my-3">
+      <div class="row">
+        <div class="col-md-8">
+          <h1>{{ news.title }}</h1> <!-- Выводите здесь title -->
+          <hr>
+          <p>{{ news.text }}</p> <!-- Выводите здесь text -->
+        </div>
+        <div class="col-md-4">
+          <h5>Категории</h5>
+          <ul class="list-group">
+            <li class="list-group-item"><a href="/news">Все новости</a></li>
+            <li class="list-group-item"><a href="#">Категория</a></li>
+            <li class="list-group-item"><a href="#">Категория</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Подвал -->
+    <footer id="footer" class="bg-dark text-white text-center py-3">
+      &copy; 2023 Новости. Все права защищены.
+    </footer>
+  </div>
+    <!-- Подключаем Bootstrap JS -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>
