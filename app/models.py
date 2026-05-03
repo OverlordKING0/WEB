@@ -1,6 +1,14 @@
 from datetime import datetime
+from email.policy import default
 
-from . import db
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+
+from . import db, login_manager
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,6 +26,24 @@ class News(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     category = db.relationship('Category', back_populates='news')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user = db.relationship('User', back_populates='news')
 
     def __repr__(self):
         return f'News {self.id}: ({self.title[:20]}...)'
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password_hash = db.Column(db.String(100), nullable=False)
+    created_on = db.Column(db.DateTime, default=datetime.now)
+    news = db.relationship('News', back_populates='user')
+
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(password, self.password_hash)
